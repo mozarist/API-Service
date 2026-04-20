@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\BookController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,3 +16,4 @@ Route::get('/api-service', function() {
 });
 
 Route::apiResource('/students', StudentController::class);
+Route::apiResource('/books', BookController::class);
