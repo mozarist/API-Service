@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\book;
 use Illuminate\Http\Request;
 
 class BookController extends Controller
@@ -11,7 +12,12 @@ class BookController extends Controller
      */
     public function index()
     {
-        //
+        $books = book::all();
+
+        return response()->json([
+            'message' => 'List of all books',
+            'data' => $books
+        ]);
     }
 
     /**
@@ -19,7 +25,18 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'author' => 'required|string|max:255',
+            'stock' => 'required|integer|min:0'
+        ]);
+
+        $book = book::create($request->all());
+
+        return response()->json([
+            'message' => 'Book data created successfully',
+            'data' => $book
+        ], 201);
     }
 
     /**
@@ -27,7 +44,12 @@ class BookController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $book = book::findOrFail($id);
+
+        return response()->json([
+            'message' => 'Successfully get book data',
+            'data' => $book
+        ], 200);
     }
 
     /**
@@ -35,7 +57,20 @@ class BookController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $book = book::findOrFail($id);
+
+        $request->validate([
+            'title' => 'sometimes|required|string|max:255',
+            'author' => 'sometimes|required|string|max:255',
+            'stock' => 'sometimes|required|integer|min:0'
+        ]);
+
+        $book->update($request->all());
+
+        return response()->json([
+            'message' => 'Book data updated successfully',
+            'data' => $book
+        ], 200);
     }
 
     /**
@@ -43,6 +78,11 @@ class BookController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $book = book::findOrFail($id);
+        $book->delete();
+
+        return response()->json([
+            'message' => 'Book data deleted successfully'
+        ], 200);
     }
 }
