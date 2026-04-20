@@ -14,10 +14,16 @@ class ProductController extends Controller
     {
         $products = product::paginate(5);
 
-        return response()->json([
-            'message' => 'List of all products',
-            'data' => $products
-        ]);
+        if ($products->isEmpty()) {
+            return response()->json([
+                'message' => 'No products found',
+            ], 404);
+        } else {
+            return response()->json([
+                'message' => 'List of all products',
+                'data' => $products
+            ], 200);
+        }
     }
 
     /**
@@ -45,12 +51,20 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(product $product)
+    public function show(string $id)
     {
+        $product = product::find($id);
+
+        if (!$product) {
+            return response()->json([
+                'message' => 'Product not found',
+            ], 404);
+        } else {
         return response()->json([
             'message' => 'Product data retrieved successfully',
             'data' => $product
-        ]);
+        ], 200);
+        }
     }
 
     /**
